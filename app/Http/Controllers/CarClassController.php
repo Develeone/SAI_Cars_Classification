@@ -8,8 +8,8 @@ use Illuminate\Http\Request;
 class CarClassController extends Controller
 {
     function main () {
-        $carClass = CarClass::where('id', 1)->first();
-        dd($carClass->getPrice());
+        $carClass = CarClass::where('id', 1)->with('price')->first();
+        dd($carClass->price);
         die();
         //return view('welcome');
     }

@@ -13,11 +13,6 @@ class CarClass extends Model
 
     public function price()
     {
-        return $this->hasOne('App\RangeValue', 'id', 'car_price_range_id');
+        return $this->hasOne('App\RangeValue', 'id', 'car_price_range_id')->first();
     }
-
-    function getPrice() {
-        return RangeValue::where('id', $this->car_price_range_id)->first();
-    }
-
 }

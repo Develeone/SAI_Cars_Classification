@@ -11,8 +11,4 @@ class RangeValue extends Model
 
     public $timestamps = false;
 
-    public function minim()
-    {
-        return $this->hasOne('App\CarClass', 'id', 'car_price_range_id');
-    }
 }
