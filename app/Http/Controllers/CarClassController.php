@@ -8,9 +8,19 @@ use Illuminate\Http\Request;
 class CarClassController extends Controller
 {
     function main () {
-        $carClass = CarClass::where('id', 1)->with('price')->first();
-        dd($carClass->price);
-        die();
-        //return view('welcome');
+        return view('welcome');
+    }
+
+    function computeClass (Request $request) {
+        $computedClasses = CarClass::whereHas('price', function ($query) use ($request) {
+            $query->where('max', '>', $request->price);
+        })->get();
+
+        if ($computedClasses->count() < 1)
+            echo ("No classes found");
+
+        foreach ($computedClasses as $class) {
+            echo("Class: ".$class->name."<br>");
+        }
     }
 }

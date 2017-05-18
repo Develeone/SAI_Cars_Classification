@@ -89,6 +89,12 @@
                     <a href="https://forge.laravel.com">Forge</a>
                     <a href="https://github.com/laravel/laravel">GitHub</a>
                 </div>
+
+                <form method="post" action="/classificate">
+                    {{csrf_field()}}
+                    <input type="number" name="price">
+                    <input type="submit" value="Send!">
+                </form>
             </div>
         </div>
     </body>

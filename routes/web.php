@@ -12,3 +12,4 @@
 */
 
 Route::get('/', "CarClassController@main");
+Route::post('/classificate', "CarClassController@computeClass");
