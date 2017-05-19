@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\ClassModel;
 use App\ClassParam;
+use App\Param;
 use Illuminate\Http\Request;
 
 class ClassificatoryController extends Controller
@@ -24,38 +25,44 @@ class ClassificatoryController extends Controller
         $all_fields = $request->all();
         unset($all_fields["_token"]);
 
-        $first_param_value = reset($all_fields);
-        $first_param_key = key($all_fields);
+        $computedClsPrmSet = ClassParam::where('id', '>', '0')
+            ->with('param', 'value', '_class')
+            ->get();
 
-        unset($all_fields[$first_param_key]);
+        $suitableClassesParams = [];
 
-        $computedClasses = ClassParam::whereHas('param', function ($query) use ($first_param_key) {
-            $query
-                ->where('name', $first_param_key);
-        })
-            ->whereHas('value', function ($query) use ($first_param_value) {
-                $query
-                    ->where('max', '>=', $first_param_value)
-                    ->where('min', '<=', $first_param_value);
-            });
-
-        foreach($all_fields as $key => $value) {
-            $computedClasses = $computedClasses->whereHas('param', function ($query) use ($key) {
-                $query
-                    ->where('name', $key);
-            })
-                ->whereHas('value', function ($query) use ($value) {
-                    $query
-                        ->where('max', '>=', $value)
-                        ->where('min', '<=', $value);
-                });
+        foreach ($computedClsPrmSet as $currClsPrm) {
+            foreach ($all_fields as $key => $value) {
+                if (
+                    $currClsPrm->param->name == $key &&
+                    $currClsPrm->value->min <= $value &&
+                    $currClsPrm->value->max >= $value
+                )
+                    array_push($suitableClassesParams, $currClsPrm);
+            }
         }
 
-        return dd($computedClasses->toSql());
+        $totalParamsCount = Param::all()->count();
 
-        $computedClasses = $computedClasses->get();
+        $classesSuitableParamsCount = [];
 
+        foreach ($suitableClassesParams as $clsParam) {
+            $clsId = $clsParam->_class->id;
 
-        return $computedClasses;
+            if (!isset($classesSuitableParamsCount["$clsId"]["count"])) {
+                $classesSuitableParamsCount["$clsId"]["count"] = 1;
+                $classesSuitableParamsCount["$clsId"]["name"] = $clsParam->_class->name;
+            } else
+                $classesSuitableParamsCount["$clsId"]["count"]++;
+        }
+
+        $resultClasses = [];
+
+        foreach ($classesSuitableParamsCount as $key => $value) {
+            if ($value["count"]== $totalParamsCount)
+                array_push($resultClasses, $value["name"]);
+        }
+
+        return $resultClasses;
     }
 }

@@ -128,7 +128,7 @@
                                     var resultHtml = "Suitable classes: <br /><br />";
 
                                     for(var i = 0; i < result.length; i++) {
-                                        resultHtml += result[i].name + "<br />";
+                                        resultHtml += result[i] + "<br />";
                                         if (i != result.length-1)
                                             resultHtml += "&<br />";
                                     }
