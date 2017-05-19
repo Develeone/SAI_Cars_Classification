@@ -4,11 +4,10 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class RangeValue extends Model
+class Value extends Model
 {
-    protected $table = 'range_value';
+    protected $table = 'values';
     protected $fillable = ['min', 'max'];
 
     public $timestamps = false;
-
 }

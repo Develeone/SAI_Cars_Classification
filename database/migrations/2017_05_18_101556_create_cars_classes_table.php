@@ -13,19 +13,31 @@ class CreateCarsClassesTable extends Migration
      */
     public function up()
     {
-        Schema::create('range_value', function (Blueprint $table) {
+        Schema::create('classes', function (Blueprint $table) {
+            $table->increments('id');
+            $table->string('name');
+        });
+
+        Schema::create('params', function (Blueprint $table) {
+            $table->increments('id');
+            $table->string('name');
+        });
+
+        Schema::create('values', function (Blueprint $table) {
             $table->increments('id');
             $table->float('min');
             $table->float('max');
         });
 
-        Schema::create('cars_classes', function (Blueprint $table) {
+        Schema::create('class_params', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('name');
+            $table->integer('class_id')->unsigned();
+            $table->integer('param_id')->unsigned();
+            $table->integer('value_id')->unsigned();
 
-            // Свойства
-            $table->integer('car_price_range_id')->unsigned();
-            $table->foreign('car_price_range_id')->references('id')->on('range_value');
+            $table->foreign('class_id')->references('id')->on('classes');
+            $table->foreign('param_id')->references('id')->on('params');
+            $table->foreign('value_id')->references('id')->on('values');
         });
     }
 
@@ -36,7 +48,9 @@ class CreateCarsClassesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('cars_classes');
-        Schema::dropIfExists('range_value');
+        Schema::dropIfExists('class_params');
+        Schema::dropIfExists('values');
+        Schema::dropIfExists('params');
+        Schema::dropIfExists('classes');
     }
 }

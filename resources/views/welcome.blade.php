@@ -10,6 +10,7 @@
         <!-- Fonts -->
         <link href="https://fonts.googleapis.com/css?family=Raleway:100,600" rel="stylesheet" type="text/css">
 
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
         <!-- Styles -->
         <style>
             html, body {
@@ -63,6 +64,25 @@
                 margin-bottom: 30px;
             }
 
+            #results {
+                margin-top: 2vw;
+                color: #636b6f;
+                font-size: 16px;
+                font-weight: 600;
+                letter-spacing: .1rem;
+                text-decoration: none;
+                text-transform: uppercase;
+                height: 0;
+                opacity: 0;
+                overflow: hidden;
+                transition: all 0.3s;
+            }
+
+            #results.expanded {
+                height: 100px;
+                opacity: 1;
+            }
+
             input[type="submit"] {
                 width: 150px;
                 height: 50px;
@@ -83,6 +103,46 @@
                 border: 15px solid #AAA;
             }
         </style>
+
+        <script>
+            $(document).ready(function(){
+                $("#submit-button").click(function(e){
+                    e.preventDefault();
+
+                    var resultBlock = $("#results");
+
+                    $(resultBlock).removeClass("expanded");
+                    setTimeout(function(){
+
+                        var formData = new FormData(document.getElementById("compute_form"));
+                        var r = new XMLHttpRequest();
+
+                        r.open("POST", '/classificate');
+                        r.setRequestHeader("ContentType", 'multipart/form-data');
+                        r.onreadystatechange = function () {
+                            if (r.readyState == 4) {
+                                if (r.status != 200) {
+                                    alert(r.responseText);
+                                } else {
+                                    var result = JSON.parse(r.responseText);
+                                    var resultHtml = "Suitable classes: <br /><br />";
+
+                                    for(var i = 0; i < result.length; i++) {
+                                        resultHtml += result[i].name + "<br />";
+                                        if (i != result.length-1)
+                                            resultHtml += "&<br />";
+                                    }
+
+                                    $(resultBlock).html(resultHtml);
+                                    $(resultBlock).addClass("expanded");
+                                }
+                            }
+                        };
+                        r.send(formData);
+                    }, 300);
+                });
+            });
+        </script>
     </head>
     <body>
         <div class="flex-center position-ref full-height">
@@ -103,6 +163,7 @@
                 </div>
 
                 <div class="links">
+                    <a href="/">Home</a>
                     <a href="/classes">Manage classes</a>
                     <a href="/classes">Manage cars</a>
                     <a href="/classes">How it works</a>
@@ -116,7 +177,7 @@
                 <br />
                 <br />
 
-                <form method="post" action="/classificate">
+                <form id="compute_form">
                     {{csrf_field()}}
 
                     <div class="links">
@@ -124,13 +185,23 @@
                         <input type="number" name="price">
                     </div>
                     <br />
+                    <div class="links">
+                        <a href="#">Type the car weight</a>
+                        <input type="number" name="weight">
+                    </div>
                     <br />
                     <br />
                     <br />
                     <br />
                     <br />
-                    <input type="submit" value="Check class!">
+                    <br />
+                    <input type="submit" value="Check class!" id="submit-button">
                 </form>
+
+
+                <div class="links" id="results">
+                    Result
+                </div>
             </div>
         </div>
     </body>

@@ -11,5 +11,8 @@
 |
 */
 
-Route::get('/', "CarClassController@main");
-Route::post('/classificate', "CarClassController@computeClass");
+Route::get('/', "ClassificatoryController@main");
+
+Route::get('/classes', "ClassificatoryController@classesPage");
+
+Route::post('/classificate', "ClassificatoryController@computeClass");
