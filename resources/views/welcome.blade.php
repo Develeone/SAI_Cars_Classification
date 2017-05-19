@@ -62,6 +62,26 @@
             .m-b-md {
                 margin-bottom: 30px;
             }
+
+            input[type="submit"] {
+                width: 150px;
+                height: 50px;
+                background-color: #EEEEEE;
+                color: #333333;
+                font-family: 'Raleway', sans-serif;
+                font-weight: 800;
+                letter-spacing: .1rem;
+                text-decoration: none;
+                text-transform: uppercase;
+                border: 1px solid #aaa;
+                transition: all 0.3s;
+                cursor: pointer;
+            }
+
+            input[type="submit"]:hover {
+                background-color: #CCC;
+                border: 15px solid #AAA;
+            }
         </style>
     </head>
     <body>
@@ -79,21 +99,37 @@
 
             <div class="content">
                 <div class="title m-b-md">
-                    Laravel
+                    Car Classificator
                 </div>
 
                 <div class="links">
-                    <a href="https://laravel.com/docs">Documentation</a>
-                    <a href="https://laracasts.com">Laracasts</a>
-                    <a href="https://laravel-news.com">News</a>
-                    <a href="https://forge.laravel.com">Forge</a>
-                    <a href="https://github.com/laravel/laravel">GitHub</a>
+                    <a href="/classes">Manage classes</a>
+                    <a href="/classes">Manage cars</a>
+                    <a href="/classes">How it works</a>
+                    <a href="/classes">About</a>
                 </div>
+
+                <br />
+                <br />
+                <br />
+                <br />
+                <br />
+                <br />
 
                 <form method="post" action="/classificate">
                     {{csrf_field()}}
-                    <input type="number" name="price">
-                    <input type="submit" value="Send!">
+
+                    <div class="links">
+                        <a href="#">Type the car price</a>
+                        <input type="number" name="price">
+                    </div>
+                    <br />
+                    <br />
+                    <br />
+                    <br />
+                    <br />
+                    <br />
+                    <input type="submit" value="Check class!">
                 </form>
             </div>
         </div>

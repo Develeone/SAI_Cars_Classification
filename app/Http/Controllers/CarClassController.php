@@ -13,7 +13,9 @@ class CarClassController extends Controller
 
     function computeClass (Request $request) {
         $computedClasses = CarClass::whereHas('price', function ($query) use ($request) {
-            $query->where('max', '>', $request->price);
+            $query
+                ->where('max', '>=', $request->price)
+                ->where('min', '<=', $request->price);
         })->get();
 
         if ($computedClasses->count() < 1)
