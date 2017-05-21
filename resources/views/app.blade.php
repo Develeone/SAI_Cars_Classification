@@ -220,8 +220,10 @@
                     r.setRequestHeader("ContentType", 'multipart/form-data');
                     r.onreadystatechange = function () {
                         if (r.readyState == 4) {
-                            if (r.status != 200) {
-                                alert(r.responseText);
+                            if (r.status == 403) {
+                                alert("Ошибка во введенных данных!");
+                            } else if (r.status == 404) {
+                                alert("Такой параметр уже существует!");
                             } else {
                                 var result = r.responseText;
                                 var resultHtml = "Adding result: <br /><br />";
@@ -255,8 +257,10 @@
                     r.setRequestHeader("ContentType", 'multipart/form-data');
                     r.onreadystatechange = function () {
                         if (r.readyState == 4) {
-                            if (r.status != 200) {
-                                alert(r.responseText);
+                            if (r.status == 403) {
+                                alert("Ошибка во введенных данных!");
+                            } else if (r.status == 404) {
+                                alert("Такой класс уже существует!");
                             } else {
                                 var result = r.responseText;
                                 var resultHtml = "Adding result: <br /><br />";
@@ -295,7 +299,7 @@
                     r.onreadystatechange = function () {
                         if (r.readyState == 4) {
                             if (r.status != 200) {
-                                alert(r.responseText);
+                                alert("Максимальное значение не может быть меньше минимального!");
                             } else {
                                 $(caller).css("visibility", "hidden");
                             }
@@ -304,6 +308,24 @@
                     r.send(formData);
                 }, 300);
             });
+
+            $(".delete-button.class").click(function() {
+                $.post("/deleteclass", {
+                    _token: "{{ csrf_token() }}",
+                    class_id: $(this).attr("data-class-id")
+                }, function () {
+                    location.reload();
+                });
+            });
+
+            $(".delete-button.param").click(function() {
+                $.post("/deleteparam", {
+                    _token: "{{ csrf_token() }}",
+                    param_id: $(this).attr("data-param-id")
+                }, function () {
+                    location.reload();
+                });
+            })
         });
     </script>
 </head>

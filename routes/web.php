@@ -20,4 +20,7 @@ Route::post('/addclass', "ClassificatoryController@addClass");
 Route::post('/addparam', "ClassificatoryController@addParam");
 Route::post('/updateclassparam', "ClassificatoryController@updateClassParam");
 
+Route::post('/deleteclass', "ClassificatoryController@deleteClass");
+Route::post('/deleteparam', "ClassificatoryController@deleteParam");
+
 Route::post('/classificate', "ClassificatoryController@computeClass");

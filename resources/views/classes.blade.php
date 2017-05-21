@@ -2,7 +2,9 @@
 
 @section("content")
     @foreach($classes as $class)
-        <H3>{{$class[0]->_class->name}} <span class="delete-button">[X]</span></H3>
+        <H3>{{$class[0]->_class->name}}
+            <span class="delete-button class" data-class-id="{{$class[0]->_class->id}}">[X]</span>
+        </H3>
         @foreach($class as $param)
             <div class="class-param">
                 <form class="edit-class-param">

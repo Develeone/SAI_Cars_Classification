@@ -3,7 +3,7 @@
 @section("content")
 
     @foreach($params as $param)
-        <H3>{{$param->name}} <span class="delete-button">[X]</span></H3>
+        <H3>{{$param->name}} <span class="delete-button param" data-param-id="{{$param->id}}">[X]</span></H3>
     @endforeach
 
     <br />

@@ -43,6 +43,16 @@ class ClassificatoryController extends Controller
     function addClass (Request $request) {
         $newClassName = strtolower($request->class_name);
 
+        $newClassName = str_ireplace(" ", "_", $newClassName);
+
+        if (preg_match("/[^a-z_]/i", $newClassName) || strlen($newClassName) < 1)
+            Die (abort(403, 'Unauthorized action.'));
+
+        $foundClass = ClassModel::where('name', $newClassName)->first();
+
+        if ($foundClass)
+            Die (abort(404, 'Unauthorized action.'));
+
         $newClass = new ClassModel;
         $newClass->name = $newClassName;
         $newClass->save();
@@ -69,6 +79,17 @@ class ClassificatoryController extends Controller
     function addParam (Request $request) {
         $newParamName = strtolower($request->param_name);
 
+        $newParamName = str_ireplace(" ", "_", $newParamName);
+
+        if (preg_match("/[^a-z_]/i", $newParamName) || strlen($newParamName) < 1)
+            Die (abort(403, 'Unauthorized action.'));
+
+        $foundParam = Param::where('name', $newParamName)->first();
+
+        if ($foundParam)
+            Die (abort(404, 'Unauthorized action.'));
+
+
         $newParam = new Param;
         $newParam->name = $newParamName;
         $newParam->save();
@@ -92,7 +113,20 @@ class ClassificatoryController extends Controller
         return $newParamName;
     }
 
+    function deleteClass (Request $request) {
+        ClassParam::where("class_id", $request->class_id)->delete();
+        ClassModel::where('id', $request->class_id)->delete();
+    }
+
+    function deleteParam (Request $request) {
+        ClassParam::where("param_id", $request->param_id)->delete();
+        Param::where('id', $request->param_id)->delete();
+    }
+
     function updateClassParam (Request $request) {
+        if ($request->max < $request->min)
+            abort(403);
+
         $value_id = $request->value_id;
 
         $editingValue = Value::where('id', $value_id)->first();
